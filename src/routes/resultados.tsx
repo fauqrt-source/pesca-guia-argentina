@@ -17,17 +17,17 @@ import {
 
 type Search = {
   region: string;
-  temporada?: Temporada;
-  nivel?: Nivel;
-  modalidad?: "devolucion" | "consumo";
+  temporada: Temporada | undefined;
+  nivel: Nivel | undefined;
+  modalidad: "devolucion" | "consumo" | undefined;
 };
 
 export const Route = createFileRoute("/resultados")({
   validateSearch: (search: Record<string, unknown>): Search => ({
-    region: typeof search.region === "string" ? search.region : "",
-    temporada: (search.temporada as Temporada) || undefined,
-    nivel: (search.nivel as Nivel) || undefined,
-    modalidad: (search.modalidad as Search["modalidad"]) || undefined,
+    region: typeof search["region"] === "string" ? (search["region"] as string) : "",
+    temporada: (search["temporada"] as Temporada) || undefined,
+    nivel: (search["nivel"] as Nivel) || undefined,
+    modalidad: (search["modalidad"] as Search["modalidad"]) || undefined,
   }),
   head: () => ({
     meta: [

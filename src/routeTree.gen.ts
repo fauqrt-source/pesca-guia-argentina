@@ -10,12 +10,19 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ResultadosRouteImport } from './routes/resultados'
 import { Route as SenuelosRouteImport } from './routes/senuelos'
 import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as EspecieEspecieIdRouteImport } from './routes/especie.$especieId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultadosRoute = ResultadosRouteImport.update({
+  id: '/resultados',
+  path: '/resultados',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SenuelosRoute = SenuelosRouteImport.update({
@@ -28,35 +35,55 @@ const SobreRoute = SobreRouteImport.update({
   path: '/sobre',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EspecieEspecieIdRoute = EspecieEspecieIdRouteImport.update({
+  id: '/especie/$especieId',
+  path: '/especie/$especieId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/resultados': typeof ResultadosRoute
   '/senuelos': typeof SenuelosRoute
   '/sobre': typeof SobreRoute
+  '/especie/$especieId': typeof EspecieEspecieIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/resultados': typeof ResultadosRoute
   '/senuelos': typeof SenuelosRoute
   '/sobre': typeof SobreRoute
+  '/especie/$especieId': typeof EspecieEspecieIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/resultados': typeof ResultadosRoute
   '/senuelos': typeof SenuelosRoute
   '/sobre': typeof SobreRoute
+  '/especie/$especieId': typeof EspecieEspecieIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/senuelos' | '/sobre'
+  fullPaths:
+    '/' | '/resultados' | '/senuelos' | '/sobre' | '/especie/$especieId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/senuelos' | '/sobre'
-  id: '__root__' | '/' | '/senuelos' | '/sobre'
+  to: '/' | '/resultados' | '/senuelos' | '/sobre' | '/especie/$especieId'
+  id:
+    | '__root__'
+    | '/'
+    | '/resultados'
+    | '/senuelos'
+    | '/sobre'
+    | '/especie/$especieId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ResultadosRoute: typeof ResultadosRoute
   SenuelosRoute: typeof SenuelosRoute
   SobreRoute: typeof SobreRoute
+  EspecieEspecieIdRoute: typeof EspecieEspecieIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -66,6 +93,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resultados': {
+      id: '/resultados'
+      path: '/resultados'
+      fullPath: '/resultados'
+      preLoaderRoute: typeof ResultadosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/senuelos': {
@@ -82,13 +116,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SobreRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/especie/$especieId': {
+      id: '/especie/$especieId'
+      path: '/especie/$especieId'
+      fullPath: '/especie/$especieId'
+      preLoaderRoute: typeof EspecieEspecieIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ResultadosRoute: ResultadosRoute,
   SenuelosRoute: SenuelosRoute,
   SobreRoute: SobreRoute,
+  EspecieEspecieIdRoute: EspecieEspecieIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
