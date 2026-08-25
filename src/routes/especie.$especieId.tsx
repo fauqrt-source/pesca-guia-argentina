@@ -157,7 +157,16 @@ function EspeciePage() {
       <h2 className="mt-10 text-xl">Dónde encontrarla</h2>
       <div className="mt-3 flex flex-wrap gap-2">
         {donde.map((r) => (
-          <Link key={r.id} to="/resultados" search={{ region: r.id }}>
+          <Link
+            key={r.id}
+            to="/resultados"
+            search={{
+              region: r.id,
+              temporada: undefined,
+              nivel: undefined,
+              modalidad: undefined,
+            }}
+          >
             <Badge variant="outline" className="px-3 py-1.5">
               {r.spot} · {r.provincia}
             </Badge>
