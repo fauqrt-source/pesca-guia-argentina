@@ -1,5 +1,19 @@
 // Modelo relacional simple. Ampliá el contenido acá sin tocar el diseño.
 
+import fotoDorado from "@/assets/peces/dorado.jpg";
+import fotoSurubi from "@/assets/peces/surubi.jpg";
+import fotoTararira from "@/assets/peces/tararira.jpg";
+import fotoPati from "@/assets/peces/pati.jpg";
+import fotoCorvina from "@/assets/peces/corvina.jpg";
+import fotoPescadilla from "@/assets/peces/pescadilla.jpg";
+import fotoTruchaArcoiris from "@/assets/peces/trucha-arcoiris.jpg";
+import fotoTruchaMarron from "@/assets/peces/trucha-marron.jpg";
+import fotoSalmon from "@/assets/peces/salmon.jpg";
+import fotoPejerrey from "@/assets/peces/pejerrey.jpg";
+import fotoBagreAmarillo from "@/assets/peces/bagre-amarillo.jpg";
+import fotoPacu from "@/assets/peces/pacu.jpg";
+import fotoBoga from "@/assets/peces/boga.jpg";
+
 export type Ambiente = "mar" | "rio" | "lago" | "laguna";
 export type Temporada = "verano" | "otono" | "invierno" | "primavera";
 export type Nivel = "principiante" | "avanzado";
@@ -19,6 +33,7 @@ export interface Especie {
   nombre: string;
   cientifico: string;
   icono: string; // emoji / ícono simple
+  foto: string; // foto real de la especie
   descripcion: string;
   detalle: string;
   temporadas: Temporada[];
@@ -110,6 +125,30 @@ export const carnadas: Carnada[] = [
     nombre: "Calamar",
     tipo: "natural",
     nota: "Tiras firmes para pescadilla y corvina, aguanta la rompiente.",
+  },
+  {
+    id: "masa",
+    nombre: "Masa / pan compacto",
+    tipo: "natural",
+    nota: "Bolita firme para boga, sábalo y bagre amarillo. Amasar con harina y esencia dulce.",
+  },
+  {
+    id: "fruta",
+    nombre: "Fruta y semillas",
+    tipo: "natural",
+    nota: "Higo, naranja, mburucuyá o maíz cocido: la carnada natural del pacú.",
+  },
+  {
+    id: "cascarudo",
+    nombre: "Cascarudo / grillo",
+    tipo: "natural",
+    nota: "Insecto vivo muy efectivo para pacú y boga cerca de camalotes.",
+  },
+  {
+    id: "menudo",
+    nombre: "Menudo de pollo",
+    tipo: "natural",
+    nota: "Barato y oloroso: ideal para bagre amarillo y patí de barranca.",
   },
   {
     id: "cuchara",
@@ -242,6 +281,27 @@ export const equipos: Equipo[] = [
     linea: "Multifilamento 15–20 lb + líder de acero fino",
     accesorios: "Anzuelos anchos, pinza larga, snaps de cambio rápido",
   },
+  {
+    id: "eq-bagre",
+    cana: "Caña de fondo o variada 2,10–2,70 m, potencia media (10–25 lb)",
+    reel: "Frontal 3000–4000, relación 5.2:1",
+    linea: "Nylon 0,30 mm o multifilamento 15 lb",
+    accesorios: "Anzuelos 1/0–3/0, plomada 40–80 g, línea de 2 brazoladas, trapo para manipular",
+  },
+  {
+    id: "eq-boga",
+    cana: "Caña variada 2,40–3,00 m, acción parabólica, potencia liviana-media",
+    reel: "Frontal 2500–3500, relación 5.2:1",
+    linea: "Nylon 0,25–0,30 mm",
+    accesorios: "Anzuelos #4–#1 de tija corta, plomada corrediza 20–40 g, boya opcional",
+  },
+  {
+    id: "eq-pacu",
+    cana: "Spinning o variada 2,10–2,40 m, potencia media-pesada (15–30 lb)",
+    reel: "Frontal 4000 con buen freno o rotativo",
+    linea: "Multifilamento 25–30 lb + líder fluorocarbono 40 lb",
+    accesorios: "Anzuelos 2/0–4/0 fuertes de tija corta, plomada liviana, copo grande",
+  },
 ];
 
 export const tecnicas: Tecnica[] = [
@@ -287,6 +347,13 @@ export const tecnicas: Tecnica[] = [
       "Boya y línea de varias brazoladas para pejerrey. Ajustá la profundidad hasta encontrar el cardumen y recuperá lento y parejo.",
     nivel: "principiante",
   },
+  {
+    id: "encarnada-liviana",
+    nombre: "Encarnada liviana de barranca",
+    descripcion:
+      "Plomada corrediza y carnada blanda (masa, fruta o insecto) cerca de camalotes y barrancas. Línea semitensa y clavada corta al primer tirón firme.",
+    nivel: "principiante",
+  },
 ];
 
 export const especies: Especie[] = [
@@ -295,10 +362,11 @@ export const especies: Especie[] = [
     nombre: "Dorado",
     cientifico: "Salminus brasiliensis",
     icono: "🐟",
+    foto: fotoDorado,
     descripcion: "El tigre del Paraná: saltos, corridas y piques violentos.",
     detalle:
       "Depredador de aguas cálidas y correntosas. Se concentra en correderas, cabeceras de islas y zonas de remanso donde caza sábalos y mojarras. Muy sensible a la presión de pesca: se recomienda devolución.",
-    temporadas: ["primavera", "verano", "otono"],
+    temporadas: ["primavera", "verano", "otono", "invierno"],
     modalidad: ["devolucion"],
     nivel: "avanzado",
     carnadas: ["morena", "mojarra", "cuchara", "popper", "minnow"],
@@ -310,10 +378,11 @@ export const especies: Especie[] = [
     nombre: "Surubí",
     cientifico: "Pseudoplatystoma corruscans",
     icono: "🐡",
+    foto: fotoSurubi,
     descripcion: "Gigante de fondo, pique nocturno y peleas de fuerza pura.",
     detalle:
       "Bagre de gran porte que habita pozones profundos del Paraná. Mejor actividad de noche y con agua en bajante. Requiere equipo robusto y paciencia: el pique es un tirón sostenido.",
-    temporadas: ["verano", "otono"],
+    temporadas: ["verano", "otono", "primavera"],
     modalidad: ["devolucion", "consumo"],
     nivel: "avanzado",
     carnadas: ["anguila", "morena", "jig"],
@@ -325,10 +394,11 @@ export const especies: Especie[] = [
     nombre: "Tararira",
     cientifico: "Hoplias malabaricus",
     icono: "🎣",
+    foto: fotoTararira,
     descripcion: "Emboscada entre juncos, ataca señuelos de superficie.",
     detalle:
       "Vive en lagunas, riachos y zonas vegetadas. Ideal para iniciarse en spinning: pesca visual, cercana y muy activa en días cálidos.",
-    temporadas: ["primavera", "verano"],
+    temporadas: ["primavera", "verano", "otono"],
     modalidad: ["devolucion", "consumo"],
     nivel: "principiante",
     carnadas: ["mojarra", "popper", "spinnerbait", "softbait"],
@@ -340,25 +410,75 @@ export const especies: Especie[] = [
     nombre: "Patí",
     cientifico: "Luciopimelodus pati",
     icono: "🐠",
+    foto: fotoPati,
     descripcion: "Bagre abundante del Paraná, pique constante desde la costa.",
     detalle:
       "Se pesca de fondo casi todo el año. Excelente objetivo para arrancar con pesca de barranca: no exige equipo fino y da acción sostenida.",
     temporadas: ["otono", "invierno", "primavera", "verano"],
     modalidad: ["consumo", "devolucion"],
     nivel: "principiante",
-    carnadas: ["lombriz", "anguila", "morena"],
+    carnadas: ["lombriz", "anguila", "morena", "menudo"],
     equipo: "eq-surubi",
     tecnicas: ["fondo"],
+  },
+  {
+    id: "bagre-amarillo",
+    nombre: "Bagre amarillo",
+    cientifico: "Pimelodus maculatus",
+    icono: "🐟",
+    foto: fotoBagreAmarillo,
+    descripcion: "El más generoso del río: pique seguro todo el año y equipo simple.",
+    detalle:
+      "Bagre de porte chico a mediano, abundantísimo en el Paraná, el Uruguay y sus riachos. Anda en grupos sobre fondos de barro y cerca de barrancas y muelles. Pica mejor con agua turbia, al atardecer y de noche. Cuidado con las espinas pectorales: manipulalo con trapo o pinza.",
+    temporadas: ["verano", "otono", "invierno", "primavera"],
+    modalidad: ["consumo", "devolucion"],
+    nivel: "principiante",
+    carnadas: ["lombriz", "menudo", "masa", "anguila"],
+    equipo: "eq-bagre",
+    tecnicas: ["fondo", "encarnada-liviana"],
+  },
+  {
+    id: "pacu",
+    nombre: "Pacú",
+    cientifico: "Piaractus mesopotamicus",
+    icono: "🐡",
+    foto: fotoPacu,
+    descripcion: "Fuerza bruta y pique fino: se busca con fruta cerca de camalotes.",
+    detalle:
+      "Habita el Paraná medio y alto, el Paraguay y los esteros correntinos. Come frutos, semillas e insectos que caen al agua, así que se lo busca bajo árboles ribereños, camalotales y bocas de riacho. Pique sutil pero pelea potentísima: exige anzuelo fuerte de tija corta y freno bien ajustado. Mejor época con agua cálida.",
+    temporadas: ["verano", "primavera", "otono"],
+    modalidad: ["devolucion", "consumo"],
+    nivel: "avanzado",
+    carnadas: ["fruta", "cascarudo", "masa"],
+    equipo: "eq-pacu",
+    tecnicas: ["encarnada-liviana", "embarcado"],
+  },
+  {
+    id: "boga",
+    nombre: "Boga",
+    cientifico: "Megaleporinus obtusidens",
+    icono: "🐠",
+    foto: fotoBoga,
+    descripcion: "Pique astuto y pelea rápida; la mejor escuela de encarnada fina.",
+    detalle:
+      "Muy común en todo el litoral. Anda en cardúmenes sobre fondos duros, espigones y correderas suaves. Roba la carnada con delicadeza: conviene masa bien compacta, anzuelo chico y clavada inmediata. Excelente objetivo cuando el dorado no pica.",
+    temporadas: ["primavera", "verano", "otono", "invierno"],
+    modalidad: ["consumo", "devolucion"],
+    nivel: "principiante",
+    carnadas: ["masa", "lombriz", "cascarudo", "fruta"],
+    equipo: "eq-boga",
+    tecnicas: ["encarnada-liviana", "fondo"],
   },
   {
     id: "corvina",
     nombre: "Corvina rubia",
     cientifico: "Micropogonias furnieri",
     icono: "🐟",
+    foto: fotoCorvina,
     descripcion: "Reina de la costa bonaerense, se pesca en la rompiente.",
     detalle:
       "Frecuenta playas de arena y escolleras. Mejores resultados con marea creciente, agua algo turbia y viento del sector este. Pique en dos golpes.",
-    temporadas: ["verano", "otono"],
+    temporadas: ["verano", "otono", "primavera"],
     modalidad: ["consumo", "devolucion"],
     nivel: "principiante",
     carnadas: ["camaron", "anchoa", "calamar"],
@@ -370,11 +490,12 @@ export const especies: Especie[] = [
     nombre: "Pescadilla",
     cientifico: "Cynoscion guatucupa",
     icono: "🐟",
+    foto: fotoPescadilla,
     descripcion: "Cardúmenes cerca de la orilla, muy activa de noche.",
     detalle:
       "Se mueve en grupos por las canaletas de playa. Cuando entra el cardumen el pique es continuo: dos brazoladas cortas y carnada chica funcionan mejor.",
-    temporadas: ["otono", "invierno"],
-    modalidad: ["consumo"],
+    temporadas: ["otono", "invierno", "primavera"],
+    modalidad: ["consumo", "devolucion"],
     nivel: "principiante",
     carnadas: ["anchoa", "calamar", "camaron"],
     equipo: "eq-pescadilla",
@@ -385,25 +506,27 @@ export const especies: Especie[] = [
     nombre: "Trucha arcoíris",
     cientifico: "Oncorhynchus mykiss",
     icono: "🐠",
+    foto: fotoTruchaArcoiris,
     descripcion: "Ícono patagónico: agua fría, cristalina y saltos largos.",
     detalle:
       "Habita ríos y lagos de la Patagonia. Busca oxígeno y comida en correderas y desembocaduras. Temporada regulada: consultá siempre el reglamento provincial.",
     temporadas: ["primavera", "verano", "otono"],
-    modalidad: ["devolucion"],
-    nivel: "avanzado",
+    modalidad: ["devolucion", "consumo"],
+    nivel: "principiante",
     carnadas: ["streamer", "ninfa", "cuchara", "minnow"],
-    equipo: "eq-trucha-fly",
-    tecnicas: ["fly", "spinning"],
+    equipo: "eq-trucha-spin",
+    tecnicas: ["spinning", "fly"],
   },
   {
     id: "trucha-marron",
     nombre: "Trucha marrón",
     cientifico: "Salmo trutta",
     icono: "🐟",
+    foto: fotoTruchaMarron,
     descripcion: "Desconfiada y territorial, premio mayor del fly patagónico.",
     detalle:
       "Prefiere sombras, troncos y barrancas socavadas. Los ejemplares grandes se mueven al atardecer y con poca luz; streamer grande y presentación silenciosa.",
-    temporadas: ["otono", "primavera"],
+    temporadas: ["otono", "primavera", "verano"],
     modalidad: ["devolucion"],
     nivel: "avanzado",
     carnadas: ["streamer", "minnow", "cuchara"],
@@ -415,10 +538,11 @@ export const especies: Especie[] = [
     nombre: "Salmón encerrado",
     cientifico: "Salmo salar sebago",
     icono: "🐡",
+    foto: fotoSalmon,
     descripcion: "Lagos profundos del sur, se busca con trolling y spinning.",
     detalle:
       "Se mantiene en cotas frías durante el verano y sube a superficie en primavera y otoño. Arrastre de cuchara plateada a media agua es la técnica clásica.",
-    temporadas: ["primavera", "otono"],
+    temporadas: ["primavera", "otono", "verano"],
     modalidad: ["devolucion", "consumo"],
     nivel: "avanzado",
     carnadas: ["cuchara", "minnow", "streamer"],
@@ -430,10 +554,11 @@ export const especies: Especie[] = [
     nombre: "Pejerrey",
     cientifico: "Odontesthes bonariensis",
     icono: "🐟",
+    foto: fotoPejerrey,
     descripcion: "Pesca social de lagunas, ideal con frío y viento suave.",
     detalle:
       "Cardúmenes en lagunas pampeanas y embalses. Mejor pique entre mayo y septiembre, con líneas de varias brazoladas y carnada chica bien presentada.",
-    temporadas: ["invierno", "otono"],
+    temporadas: ["invierno", "otono", "primavera"],
     modalidad: ["consumo", "devolucion"],
     nivel: "principiante",
     carnadas: ["lombriz", "mojarra"],
@@ -442,15 +567,89 @@ export const especies: Especie[] = [
   },
 ];
 
+const LITORAL = ["dorado", "surubi", "pati", "bagre-amarillo", "boga", "pacu", "tararira"];
+
 export const regiones: Region[] = [
   {
-    id: "rio-parana",
-    provincia: "Santa Fe / Entre Ríos",
+    id: "paso-de-la-patria",
+    provincia: "Corrientes",
     ambiente: "rio",
-    spot: "Río Paraná",
+    spot: "Paso de la Patria",
+    descripcion:
+      "Confluencia del Paraná y el Paraguay: capital del dorado. Correderas, restingas e islas con pesca embarcada de primer nivel.",
+    especies: LITORAL,
+  },
+  {
+    id: "goya",
+    provincia: "Corrientes",
+    ambiente: "rio",
+    spot: "Goya",
+    descripcion:
+      "Riachos, lagunas internas y el Paraná ancho. Surubí de fondo en los pozones y pacú entre camalotales.",
+    especies: ["surubi", "pacu", "dorado", "bagre-amarillo", "boga", "pati"],
+  },
+  {
+    id: "empedrado",
+    provincia: "Corrientes",
+    ambiente: "rio",
+    spot: "Empedrado",
+    descripcion:
+      "Barrancas altas y playas de arena sobre el Paraná. Muy buena pesca de costa de bagre amarillo, boga y patí.",
+    especies: ["bagre-amarillo", "boga", "pati", "dorado", "surubi"],
+  },
+  {
+    id: "esquina",
+    provincia: "Corrientes",
+    ambiente: "rio",
+    spot: "Esquina (río Corriente)",
+    descripcion:
+      "Desembocadura del río Corriente en el Paraná: aguas más claras, dorado de spinning y tararira en los esteros cercanos.",
+    especies: ["dorado", "tararira", "boga", "bagre-amarillo", "pati"],
+  },
+  {
+    id: "reconquista",
+    provincia: "Santa Fe",
+    ambiente: "rio",
+    spot: "Reconquista (río San Jerónimo)",
+    descripcion:
+      "Riachos del norte santafesino con mucha estructura vegetal. Dorado, tararira y bagres desde la costa o en canoa.",
+    especies: ["dorado", "tararira", "bagre-amarillo", "boga", "pati", "surubi"],
+  },
+  {
+    id: "rio-parana",
+    provincia: "Santa Fe",
+    ambiente: "rio",
+    spot: "Río Paraná (Rosario y alrededores)",
     descripcion:
       "Correderas, islas y pozones profundos. El escenario más completo del país: dorado, surubí y bagres todo el año.",
-    especies: ["dorado", "surubi", "pati", "tararira"],
+    especies: LITORAL,
+  },
+  {
+    id: "parana-entre-rios",
+    provincia: "Entre Ríos",
+    ambiente: "rio",
+    spot: "Paraná (ciudad y Victoria)",
+    descripcion:
+      "Frente a Rosario y Santa Fe: túneles de riachos, sauzales y grandes pozones. Ideal para surubí y boga.",
+    especies: ["surubi", "dorado", "boga", "bagre-amarillo", "pati", "pacu"],
+  },
+  {
+    id: "gualeguaychu",
+    provincia: "Entre Ríos",
+    ambiente: "rio",
+    spot: "Gualeguaychú (río Uruguay)",
+    descripcion:
+      "Río Uruguay bajo, con playas, restingas y espigones. Boga, bagre amarillo, dorado y tararira en los arroyos.",
+    especies: ["boga", "bagre-amarillo", "dorado", "tararira", "pati"],
+  },
+  {
+    id: "zarate",
+    provincia: "Buenos Aires",
+    ambiente: "rio",
+    spot: "Zárate (Paraná de las Palmas)",
+    descripcion:
+      "Delta bonaerense a una hora de CABA: muelles, arroyos y barrancas. Bagre amarillo y boga durante todo el año.",
+    especies: ["bagre-amarillo", "boga", "pati", "tararira", "dorado", "surubi"],
   },
   {
     id: "mar-del-plata",
@@ -462,15 +661,6 @@ export const regiones: Region[] = [
     especies: ["corvina", "pescadilla"],
   },
   {
-    id: "lagos-patagonicos",
-    provincia: "Neuquén / Río Negro",
-    ambiente: "lago",
-    spot: "Lagos y ríos patagónicos",
-    descripcion:
-      "Agua fría y cristalina entre bosques. Territorio de salmónidos, fly casting y trolling en lagos profundos.",
-    especies: ["trucha-arcoiris", "trucha-marron", "salmon-encerrado"],
-  },
-  {
     id: "laguna-chascomus",
     provincia: "Buenos Aires",
     ambiente: "laguna",
@@ -478,6 +668,33 @@ export const regiones: Region[] = [
     descripcion:
       "Laguna pampeana somera, clásica del pejerrey embarcado y de la tararira en la costa vegetada.",
     especies: ["pejerrey", "tararira"],
+  },
+  {
+    id: "esteros-ibera",
+    provincia: "Corrientes",
+    ambiente: "laguna",
+    spot: "Esteros del Iberá",
+    descripcion:
+      "Lagunas y embalsados con vegetación densa. Paraíso de la tararira de superficie y del pique de bagres.",
+    especies: ["tararira", "bagre-amarillo", "boga", "pejerrey"],
+  },
+  {
+    id: "salto-grande",
+    provincia: "Entre Ríos",
+    ambiente: "lago",
+    spot: "Embalse de Salto Grande",
+    descripcion:
+      "Gran espejo de agua sobre el río Uruguay. Dorado y boga en las correderas del pie de represa, tararira en las bahías.",
+    especies: ["dorado", "boga", "tararira", "bagre-amarillo", "surubi"],
+  },
+  {
+    id: "lagos-patagonicos",
+    provincia: "Neuquén / Río Negro",
+    ambiente: "lago",
+    spot: "Lagos y ríos patagónicos",
+    descripcion:
+      "Agua fría y cristalina entre bosques. Territorio de salmónidos, fly casting y trolling en lagos profundos.",
+    especies: ["trucha-arcoiris", "trucha-marron", "salmon-encerrado"],
   },
 ];
 
@@ -497,4 +714,13 @@ export function getEquipo(id: string) {
 }
 export function getTecnica(id: string) {
   return tecnicas.find((t) => t.id === id);
+}
+
+/** Regiones que cumplen provincia/ambiente (usá "todos" para no filtrar). */
+export function filtrarRegiones(provincia?: string, ambiente?: string) {
+  return regiones.filter(
+    (r) =>
+      (!provincia || provincia === "todos" || r.provincia === provincia) &&
+      (!ambiente || ambiente === "todos" || r.ambiente === ambiente),
+  );
 }
