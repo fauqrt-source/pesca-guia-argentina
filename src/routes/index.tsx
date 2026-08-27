@@ -64,15 +64,28 @@ function Index() {
     [provincia, ambiente],
   );
 
+  const filtros = {
+    temporada: temporada === TODOS ? undefined : (temporada as Temporada),
+    nivel: nivel === TODOS ? undefined : (nivel as Nivel),
+    modalidad: modalidad === TODOS ? undefined : (modalidad as "devolucion" | "consumo"),
+  };
+
   const buscar = (regionId: string) => {
+    navigate({ to: "/resultados", search: { region: regionId, ...filtros } });
+  };
+
+  /** Sin spot elegido: recomendaciones de toda la provincia y/o ambiente. */
+  const buscarZona = () => {
+    if (spot) {
+      buscar(spot);
+      return;
+    }
     navigate({
       to: "/resultados",
       search: {
-        region: regionId,
-        temporada: temporada === TODOS ? undefined : (temporada as Temporada),
-        nivel: nivel === TODOS ? undefined : (nivel as Nivel),
-        modalidad:
-          modalidad === TODOS ? undefined : (modalidad as "devolucion" | "consumo"),
+        provincia: provincia === TODOS ? undefined : provincia,
+        ambiente: ambiente === TODOS ? undefined : ambiente,
+        ...filtros,
       },
     });
   };
@@ -151,10 +164,10 @@ function Index() {
               </div>
 
               <div className="space-y-1.5 sm:col-span-2">
-                <Label>Spot</Label>
+                <Label>Cuerpo de agua / localidad (opcional)</Label>
                 <Select value={spot} onValueChange={setSpot}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Elegí un cuerpo de agua" />
+                    <SelectValue placeholder="Todos los de la selección" />
                   </SelectTrigger>
                   <SelectContent>
                     {disponibles.map((r) => (
@@ -164,8 +177,14 @@ function Index() {
                     ))}
                   </SelectContent>
                 </Select>
+                <p className="text-xs text-muted-foreground">
+                  {disponibles.length} zona{disponibles.length === 1 ? "" : "s"} disponible
+                  {disponibles.length === 1 ? "" : "s"}. Si no elegís ninguna, te mostramos todas las
+                  recomendaciones de la provincia y el ambiente seleccionados.
+                </p>
               </div>
             </div>
+
 
             <div className="grid gap-4 border-t border-border pt-4 sm:grid-cols-3">
               <div className="space-y-1.5">

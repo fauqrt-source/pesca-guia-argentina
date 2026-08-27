@@ -215,3 +215,18 @@
   letter-spacing: 0.18em;
   font-size: 0.72rem;
 }
+
+:root {
+  --wind-calm: oklch(0.72 0.09 200);
+  --wind-suave: oklch(0.74 0.13 155);
+  --wind-medio: oklch(0.79 0.15 90);
+  --wind-fuerte: oklch(0.68 0.17 45);
+  --wind-severo: oklch(0.55 0.19 25);
+  --wind-land: oklch(0.93 0.02 120);
+  --wind-water: oklch(0.95 0.02 230);
+}
+
+.dark {
+  --wind-land: oklch(0.28 0.02 140);
+  --wind-water: oklch(0.24 0.03 240);
+}
