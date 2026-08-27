@@ -64,15 +64,28 @@ function Index() {
     [provincia, ambiente],
   );
 
+  const filtros = {
+    temporada: temporada === TODOS ? undefined : (temporada as Temporada),
+    nivel: nivel === TODOS ? undefined : (nivel as Nivel),
+    modalidad: modalidad === TODOS ? undefined : (modalidad as "devolucion" | "consumo"),
+  };
+
   const buscar = (regionId: string) => {
+    navigate({ to: "/resultados", search: { region: regionId, ...filtros } });
+  };
+
+  /** Sin spot elegido: recomendaciones de toda la provincia y/o ambiente. */
+  const buscarZona = () => {
+    if (spot) {
+      buscar(spot);
+      return;
+    }
     navigate({
       to: "/resultados",
       search: {
-        region: regionId,
-        temporada: temporada === TODOS ? undefined : (temporada as Temporada),
-        nivel: nivel === TODOS ? undefined : (nivel as Nivel),
-        modalidad:
-          modalidad === TODOS ? undefined : (modalidad as "devolucion" | "consumo"),
+        provincia: provincia === TODOS ? undefined : provincia,
+        ambiente: ambiente === TODOS ? undefined : ambiente,
+        ...filtros,
       },
     });
   };
