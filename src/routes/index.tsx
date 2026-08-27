@@ -164,10 +164,10 @@ function Index() {
               </div>
 
               <div className="space-y-1.5 sm:col-span-2">
-                <Label>Spot</Label>
+                <Label>Cuerpo de agua / localidad (opcional)</Label>
                 <Select value={spot} onValueChange={setSpot}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Elegí un cuerpo de agua" />
+                    <SelectValue placeholder="Todos los de la selección" />
                   </SelectTrigger>
                   <SelectContent>
                     {disponibles.map((r) => (
@@ -177,8 +177,14 @@ function Index() {
                     ))}
                   </SelectContent>
                 </Select>
+                <p className="text-xs text-muted-foreground">
+                  {disponibles.length} zona{disponibles.length === 1 ? "" : "s"} disponible
+                  {disponibles.length === 1 ? "" : "s"}. Si no elegís ninguna, te mostramos todas las
+                  recomendaciones de la provincia y el ambiente seleccionados.
+                </p>
               </div>
             </div>
+
 
             <div className="grid gap-4 border-t border-border pt-4 sm:grid-cols-3">
               <div className="space-y-1.5">
