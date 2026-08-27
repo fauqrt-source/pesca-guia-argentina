@@ -19,12 +19,12 @@ import {
 } from "@/data/pesca";
 
 type Search = {
-  region?: string;
-  provincia?: string;
-  ambiente?: string;
-  temporada: Temporada | undefined;
-  nivel: Nivel | undefined;
-  modalidad: "devolucion" | "consumo" | undefined;
+  region?: string | undefined;
+  provincia?: string | undefined;
+  ambiente?: string | undefined;
+  temporada?: Temporada | undefined;
+  nivel?: Nivel | undefined;
+  modalidad?: "devolucion" | "consumo" | undefined;
 };
 
 export const Route = createFileRoute("/resultados")({
