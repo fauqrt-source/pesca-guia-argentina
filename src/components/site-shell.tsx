@@ -4,8 +4,9 @@ import type { ReactNode } from "react";
 
 const nav = [
   { to: "/", label: "Inicio" },
-  { to: "/senuelos", label: "Guía de señuelos" },
-  { to: "/sobre", label: "Sobre la app" },
+  { to: "/viento", label: "Viento" },
+  { to: "/senuelos", label: "Señuelos" },
+  { to: "/sobre", label: "Sobre" },
 ] as const;
 
 export function SiteHeader() {
