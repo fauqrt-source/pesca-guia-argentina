@@ -54,22 +54,28 @@ function EspeciePage() {
         <ArrowLeft className="size-4" /> Volver al buscador
       </Link>
 
-      <div className="surface-river mt-4 rounded-xl p-6 shadow-outdoor">
-        <span className="text-4xl" aria-hidden>
-          {especie.icono}
-        </span>
-        <h1 className="mt-2 text-3xl sm:text-4xl">{especie.nombre}</h1>
-        <p className="mt-1 text-sm italic opacity-80">{especie.cientifico}</p>
-        <p className="mt-3 max-w-prose opacity-95">{especie.detalle}</p>
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          {especie.temporadas.map((t) => (
-            <Badge key={t} variant="secondary">
-              {TEMPORADAS.find((x) => x.id === t)?.label}
+      <div className="surface-river mt-4 grid gap-5 rounded-xl p-6 shadow-outdoor sm:grid-cols-[220px_minmax(0,1fr)]">
+        <img
+          src={especie.foto}
+          alt={`Foto de ${especie.nombre} (${especie.cientifico})`}
+          width={1024}
+          height={768}
+          className="h-44 w-full rounded-lg object-cover shadow-card sm:h-full"
+        />
+        <div>
+          <h1 className="text-3xl sm:text-4xl">{especie.nombre}</h1>
+          <p className="mt-1 text-sm italic opacity-80">{especie.cientifico}</p>
+          <p className="mt-3 max-w-prose opacity-95">{especie.detalle}</p>
+          <div className="mt-4 flex flex-wrap gap-1.5">
+            {especie.temporadas.map((t) => (
+              <Badge key={t} variant="secondary">
+                {TEMPORADAS.find((x) => x.id === t)?.label}
+              </Badge>
+            ))}
+            <Badge variant="secondary">
+              {especie.nivel === "principiante" ? "Apto principiantes" : "Nivel avanzado"}
             </Badge>
-          ))}
-          <Badge variant="secondary">
-            {especie.nivel === "principiante" ? "Apto principiantes" : "Nivel avanzado"}
-          </Badge>
+          </div>
         </div>
       </div>
 
