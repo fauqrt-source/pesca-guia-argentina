@@ -231,12 +231,7 @@ function Index() {
               </div>
             </div>
 
-            <Button
-              size="lg"
-              className="w-full"
-              disabled={!spot}
-              onClick={() => spot && buscar(spot)}
-            >
+            <Button size="lg" className="w-full" onClick={buscarZona}>
               <Search className="size-4" /> Ver recomendación
             </Button>
           </CardContent>
