@@ -45,6 +45,8 @@ function EspeciePage() {
   const donde = regiones.filter((r) => r.especies.includes(especie.id));
   const naturales = especie.carnadas.map(getCarnada).filter((c) => c?.tipo === "natural");
   const artificiales = especie.carnadas.map(getCarnada).filter((c) => c?.tipo === "artificial");
+  const recetasEspecie = getRecetasDeEspecie(especie.id);
+  const avisoDevolucion = soloDevolucion[especie.id];
 
   return (
     <PageShell>
