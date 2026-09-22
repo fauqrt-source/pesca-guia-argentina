@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChefHat, Clock, Users } from "lucide-react";
 import { PageShell } from "@/components/site-shell";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +11,7 @@ import {
   getTecnica,
   regiones,
 } from "@/data/pesca";
+import { getRecetasDeEspecie, soloDevolucion } from "@/data/recetas";
 
 export const Route = createFileRoute("/especie/$especieId")({
   loader: ({ params }) => {
