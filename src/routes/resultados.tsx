@@ -306,6 +306,9 @@ function ResultadosPage() {
         <Button asChild variant="outline">
           <Link to="/senuelos">Ver guía de señuelos</Link>
         </Button>
+        <Button asChild variant="outline">
+          <Link to="/recetas">Ver recetas</Link>
+        </Button>
         <Button asChild>
           <Link to="/">Probar otra zona</Link>
         </Button>
