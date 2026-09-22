@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChefHat, Clock, Users } from "lucide-react";
 import { PageShell } from "@/components/site-shell";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +11,7 @@ import {
   getTecnica,
   regiones,
 } from "@/data/pesca";
+import { getRecetasDeEspecie, soloDevolucion } from "@/data/recetas";
 
 export const Route = createFileRoute("/especie/$especieId")({
   loader: ({ params }) => {
@@ -44,6 +45,8 @@ function EspeciePage() {
   const donde = regiones.filter((r) => r.especies.includes(especie.id));
   const naturales = especie.carnadas.map(getCarnada).filter((c) => c?.tipo === "natural");
   const artificiales = especie.carnadas.map(getCarnada).filter((c) => c?.tipo === "artificial");
+  const recetasEspecie = getRecetasDeEspecie(especie.id);
+  const avisoDevolucion = soloDevolucion[especie.id];
 
   return (
     <PageShell>
@@ -179,6 +182,63 @@ function EspeciePage() {
           </Link>
         ))}
       </div>
+
+      <h2 className="mt-10 flex items-center gap-2 text-xl">
+        <ChefHat className="size-5 text-accent" /> Cómo cocinarla
+      </h2>
+      {avisoDevolucion ? (
+        <p className="mt-3 rounded-md border border-border bg-secondary/60 p-4 text-sm">
+          {avisoDevolucion}
+        </p>
+      ) : recetasEspecie.length === 0 ? (
+        <p className="mt-3 text-sm text-muted-foreground">
+          Todavía no cargamos una receta para esta especie.{" "}
+          <Link to="/recetas" className="underline hover:text-foreground">
+            Ver todas las recetas
+          </Link>
+          .
+        </p>
+      ) : (
+        <div className="mt-3 space-y-4">
+          {recetasEspecie.map((receta) => (
+            <Card key={receta.id} className="shadow-card">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base">{receta.nombre}</CardTitle>
+                <div className="mt-2 flex flex-wrap gap-1.5 text-[11px]">
+                  <Badge variant="outline" className="gap-1">
+                    <Clock className="size-3" /> {receta.tiempo}
+                  </Badge>
+                  <Badge variant="outline" className="gap-1">
+                    <Users className="size-3" /> {receta.porciones}
+                  </Badge>
+                  <Badge variant="secondary">Dificultad {receta.dificultad}</Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="grid gap-5 text-sm sm:grid-cols-2">
+                <section>
+                  <h3 className="eyebrow text-accent">Ingredientes</h3>
+                  <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+                    {receta.ingredientes.map((i) => (
+                      <li key={i}>{i}</li>
+                    ))}
+                  </ul>
+                </section>
+                <section>
+                  <h3 className="eyebrow text-accent">Preparación</h3>
+                  <ol className="mt-2 list-decimal space-y-1.5 pl-5 text-muted-foreground">
+                    {receta.pasos.map((p) => (
+                      <li key={p}>{p}</li>
+                    ))}
+                  </ol>
+                  <p className="mt-3 rounded-md border border-border bg-secondary/60 p-3">
+                    <span className="font-medium">Tip:</span> {receta.tip}
+                  </p>
+                </section>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </PageShell>
   );
 }
