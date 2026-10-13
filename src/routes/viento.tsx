@@ -227,7 +227,7 @@ function VientoPage() {
                     <Badge
                       variant="outline"
                       style={{ borderColor: s.color, color: s.color }}
-                      className="w-[92px] justify-center"
+                      className="hidden w-[92px] justify-center min-[400px]:inline-flex"
                     >
                       {s.label}
                     </Badge>
