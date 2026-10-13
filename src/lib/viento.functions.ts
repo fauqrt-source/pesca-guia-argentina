@@ -62,43 +62,37 @@ export const getMapaViento = createServerFn({ method: "GET" }).handler(
     const lon = PUNTOS.map((p) => p.lon).join(",");
     const url =
       `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-      `&current=wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=kmh&timezone=America%2FArgentina%2FBuenos_Aires`;
+      `&current=wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=kmh&timezone=GMT`;
 
-    try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`open-meteo ${res.status}`);
-      const json = (await res.json()) as unknown;
-      const arr = Array.isArray(json) ? json : [json];
-
-      const puntos: PuntoViento[] = PUNTOS.map((p, i) => {
-        const entry = arr[i] as
-          | {
-              current?: {
-                time?: string;
-                wind_speed_10m?: number;
-                wind_direction_10m?: number;
-                wind_gusts_10m?: number;
-              };
-            }
-          | undefined;
-        const c = entry?.current;
-        return {
-          ...p,
-          velocidad: Math.round(c?.wind_speed_10m ?? 0),
-          rafaga: Math.round(c?.wind_gusts_10m ?? 0),
-          direccion: Math.round(c?.wind_direction_10m ?? 0),
-          hora: c?.time ?? "",
-        };
-      });
-
-      return { actualizado: new Date().toISOString(), puntos };
-    } catch (err) {
-      console.error("[viento] fallo al consultar Open-Meteo", err);
-      return {
-        actualizado: new Date().toISOString(),
-        puntos: [],
-        error: "No pudimos actualizar el viento en este momento. Reintentá en unos minutos.",
-      };
+    const res = await fetch(url, { headers: { accept: "application/json" } });
+    if (!res.ok) {
+      console.error("[viento] Open-Meteo", res.status, await res.text().catch(() => ""));
+      throw new Error("No pudimos actualizar el viento");
     }
+    const json = (await res.json()) as unknown;
+    const arr = (Array.isArray(json) ? json : [json]) as Array<{
+      current?: {
+        time?: string;
+        wind_speed_10m?: number;
+        wind_direction_10m?: number;
+        wind_gusts_10m?: number;
+      };
+    }>;
+
+    const puntos: PuntoViento[] = PUNTOS.map((p, i) => {
+      const c = arr[i]?.current;
+      return {
+        ...p,
+        velocidad: Math.round(c?.wind_speed_10m ?? 0),
+        rafaga: Math.round(c?.wind_gusts_10m ?? 0),
+        direccion: Math.round(c?.wind_direction_10m ?? 0),
+        hora: c?.time ?? "",
+      };
+    });
+
+    // Hora real de la medición devuelta por la API (en UTC).
+    const t = arr[0]?.current?.time;
+    if (!t) throw new Error("Respuesta de viento incompleta");
+    return { actualizado: `${t}:00Z`, puntos };
   },
 );

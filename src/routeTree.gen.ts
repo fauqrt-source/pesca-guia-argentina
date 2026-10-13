@@ -14,6 +14,7 @@ import { Route as RecetasRouteImport } from './routes/recetas'
 import { Route as ResultadosRouteImport } from './routes/resultados'
 import { Route as SenuelosRouteImport } from './routes/senuelos'
 import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as TorneosRouteImport } from './routes/torneos'
 import { Route as VientoRouteImport } from './routes/viento'
 import { Route as EspecieEspecieIdRouteImport } from './routes/especie.$especieId'
 
@@ -42,6 +43,11 @@ const SobreRoute = SobreRouteImport.update({
   path: '/sobre',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TorneosRoute = TorneosRouteImport.update({
+  id: '/torneos',
+  path: '/torneos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VientoRoute = VientoRouteImport.update({
   id: '/viento',
   path: '/viento',
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/resultados': typeof ResultadosRoute
   '/senuelos': typeof SenuelosRoute
   '/sobre': typeof SobreRoute
+  '/torneos': typeof TorneosRoute
   '/viento': typeof VientoRoute
   '/especie/$especieId': typeof EspecieEspecieIdRoute
 }
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/resultados': typeof ResultadosRoute
   '/senuelos': typeof SenuelosRoute
   '/sobre': typeof SobreRoute
+  '/torneos': typeof TorneosRoute
   '/viento': typeof VientoRoute
   '/especie/$especieId': typeof EspecieEspecieIdRoute
 }
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/resultados': typeof ResultadosRoute
   '/senuelos': typeof SenuelosRoute
   '/sobre': typeof SobreRoute
+  '/torneos': typeof TorneosRoute
   '/viento': typeof VientoRoute
   '/especie/$especieId': typeof EspecieEspecieIdRoute
 }
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/resultados'
     | '/senuelos'
     | '/sobre'
+    | '/torneos'
     | '/viento'
     | '/especie/$especieId'
   fileRoutesByTo: FileRoutesByTo
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/resultados'
     | '/senuelos'
     | '/sobre'
+    | '/torneos'
     | '/viento'
     | '/especie/$especieId'
   id:
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/resultados'
     | '/senuelos'
     | '/sobre'
+    | '/torneos'
     | '/viento'
     | '/especie/$especieId'
   fileRoutesById: FileRoutesById
@@ -117,6 +129,7 @@ export interface RootRouteChildren {
   ResultadosRoute: typeof ResultadosRoute
   SenuelosRoute: typeof SenuelosRoute
   SobreRoute: typeof SobreRoute
+  TorneosRoute: typeof TorneosRoute
   VientoRoute: typeof VientoRoute
   EspecieEspecieIdRoute: typeof EspecieEspecieIdRoute
 }
@@ -158,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SobreRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/torneos': {
+      id: '/torneos'
+      path: '/torneos'
+      fullPath: '/torneos'
+      preLoaderRoute: typeof TorneosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/viento': {
       id: '/viento'
       path: '/viento'
@@ -181,6 +201,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResultadosRoute: ResultadosRoute,
   SenuelosRoute: SenuelosRoute,
   SobreRoute: SobreRoute,
+  TorneosRoute: TorneosRoute,
   VientoRoute: VientoRoute,
   EspecieEspecieIdRoute: EspecieEspecieIdRoute,
 }
