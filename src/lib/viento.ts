@@ -1,4 +1,6 @@
-import { createServerFn } from "@tanstack/react-start";
+// Consulta de viento a Open-Meteo hecha desde el navegador del visitante.
+// Motivo: desde el servidor compartido la cuota gratuita diaria se agota (HTTP 429).
+// Open-Meteo no usa API key y permite llamadas desde el navegador.
 
 export interface PuntoViento {
   id: string;
@@ -6,18 +8,19 @@ export interface PuntoViento {
   provincia: string;
   lat: number;
   lon: number;
-  /** km/h */
-  velocidad: number;
-  rafaga: number;
+  /** km/h; null si ese spot no devolvió datos */
+  velocidad: number | null;
+  rafaga: number | null;
   /** grados desde donde sopla */
-  direccion: number;
+  direccion: number | null;
   hora: string;
 }
 
 export interface MapaViento {
+  /** ISO UTC de la medición devuelta por la API */
   actualizado: string;
   puntos: PuntoViento[];
-  error?: string;
+  fallidos: number;
 }
 
 const PUNTOS = [
@@ -56,43 +59,70 @@ const PUNTOS = [
   { id: "ushuaia", nombre: "Ushuaia", provincia: "Tierra del Fuego", lat: -54.8, lon: -68.3 },
 ];
 
-export const getMapaViento = createServerFn({ method: "GET" }).handler(
-  async (): Promise<MapaViento> => {
-    const lat = PUNTOS.map((p) => p.lat).join(",");
-    const lon = PUNTOS.map((p) => p.lon).join(",");
-    const url =
-      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-      `&current=wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=kmh&timezone=GMT`;
+const BASE = "https://api.open-meteo.com/v1/forecast";
 
-    const res = await fetch(url, { headers: { accept: "application/json" } });
-    if (!res.ok) {
-      console.error("[viento] Open-Meteo", res.status, await res.text().catch(() => ""));
-      throw new Error("No pudimos actualizar el viento");
-    }
-    const json = (await res.json()) as unknown;
-    const arr = (Array.isArray(json) ? json : [json]) as Array<{
-      current?: {
-        time?: string;
-        wind_speed_10m?: number;
-        wind_direction_10m?: number;
-        wind_gusts_10m?: number;
-      };
-    }>;
+interface Current {
+  time?: string;
+  wind_speed_10m?: number | null;
+  wind_gusts_10m?: number | null;
+  wind_direction_10m?: number | null;
+}
 
-    const puntos: PuntoViento[] = PUNTOS.map((p, i) => {
-      const c = arr[i]?.current;
-      return {
-        ...p,
-        velocidad: Math.round(c?.wind_speed_10m ?? 0),
-        rafaga: Math.round(c?.wind_gusts_10m ?? 0),
-        direccion: Math.round(c?.wind_direction_10m ?? 0),
-        hora: c?.time ?? "",
-      };
-    });
+function url(pts: { lat: number; lon: number }[]) {
+  const lat = pts.map((p) => p.lat).join(",");
+  const lon = pts.map((p) => p.lon).join(",");
+  return (
+    `${BASE}?latitude=${lat}&longitude=${lon}` +
+    `&current=wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=kmh&timezone=GMT`
+  );
+}
 
-    // Hora real de la medición devuelta por la API (en UTC).
-    const t = arr[0]?.current?.time;
-    if (!t) throw new Error("Respuesta de viento incompleta");
-    return { actualizado: `${t}:00Z`, puntos };
-  },
-);
+async function pedir(pts: { lat: number; lon: number }[]): Promise<(Current | undefined)[]> {
+  const res = await fetch(url(pts), { headers: { accept: "application/json" } });
+  if (!res.ok) {
+    const txt = await res.text().catch(() => "");
+    console.error("[viento] Open-Meteo", res.status, txt);
+    throw new Error(`Open-Meteo ${res.status}`);
+  }
+  const json = (await res.json()) as unknown;
+  const arr = (Array.isArray(json) ? json : [json]) as { current?: Current }[];
+  return pts.map((_, i) => arr[i]?.current);
+}
+
+const num = (v: number | null | undefined) =>
+  typeof v === "number" && Number.isFinite(v) ? Math.round(v) : null;
+
+export async function getMapaViento(): Promise<MapaViento> {
+  let currents: (Current | undefined)[];
+  try {
+    // Una sola llamada con todos los spots.
+    currents = await pedir(PUNTOS);
+  } catch {
+    // Si la llamada grupal falla, pedimos cada spot por separado:
+    // los que respondan se muestran igual.
+    const res = await Promise.allSettled(PUNTOS.map((p) => pedir([p])));
+    currents = res.map((r) => (r.status === "fulfilled" ? r.value[0] : undefined));
+  }
+
+  const puntos: PuntoViento[] = PUNTOS.map((p, i) => {
+    const c = currents[i];
+    return {
+      ...p,
+      velocidad: num(c?.wind_speed_10m),
+      rafaga: num(c?.wind_gusts_10m),
+      direccion: num(c?.wind_direction_10m),
+      hora: c?.time ?? "",
+    };
+  });
+
+  const conDatos = puntos.filter((p) => p.velocidad !== null && p.hora);
+  if (conDatos.length === 0) throw new Error("Sin datos de viento");
+
+  // Hora real de la medición devuelta por la API (UTC, formato YYYY-MM-DDTHH:mm).
+  const t = conDatos.map((p) => p.hora).sort().at(-1)!;
+  return {
+    actualizado: `${t}:00Z`,
+    puntos,
+    fallidos: puntos.length - conDatos.length,
+  };
+}
