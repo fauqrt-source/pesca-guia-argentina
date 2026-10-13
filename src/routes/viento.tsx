@@ -1,20 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { Wind } from "lucide-react";
+import { queryOptions, useQuery } from "@tanstack/react-query";
+import { Loader2, Wind } from "lucide-react";
 import { PageShell } from "@/components/site-shell";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { getMapaViento, type PuntoViento } from "@/lib/viento.functions";
 
 const vientoQueryOptions = queryOptions({
   queryKey: ["viento", "argentina"],
   queryFn: () => getMapaViento(),
   staleTime: 1000 * 60 * 60, // 1 hora
+  retry: 1,
 });
 
 export const Route = createFileRoute("/viento")({
-  loader: ({ context }) => {
-    void context.queryClient.ensureQueryData(vientoQueryOptions);
-  },
   head: () => ({
     meta: [
       { title: "Mapa del viento en Argentina para pescar | Pesca Argentina" },
@@ -115,11 +114,36 @@ function Flecha({ p }: { p: PuntoViento }) {
 }
 
 function VientoPage() {
-  const { data } = useSuspenseQuery(vientoQueryOptions);
+  const { data, isPending, isError, refetch, isFetching } = useQuery(vientoQueryOptions);
+
+  if (isPending || (isError && isFetching)) {
+    return (
+      <PageShell>
+        <div className="flex items-center gap-2 py-16 text-muted-foreground" role="status">
+          <Loader2 className="size-5 animate-spin" /> Cargando viento…
+        </div>
+      </PageShell>
+    );
+  }
+
+  if (isError || !data) {
+    return (
+      <PageShell>
+        <div className="rounded-md border border-border bg-secondary/60 p-6 text-center">
+          <p>No pudimos actualizar el viento. Reintentá en unos minutos.</p>
+          <Button className="mt-4" onClick={() => void refetch()}>
+            Reintentar
+          </Button>
+        </div>
+      </PageShell>
+    );
+  }
+
   const puntos = data.puntos;
   const fecha = new Date(data.actualizado).toLocaleString("es-AR", {
     dateStyle: "long",
     timeStyle: "short",
+    timeZone: "America/Argentina/Buenos_Aires",
   });
 
   const ordenados = [...puntos].sort((a, b) => b.velocidad - a.velocidad);
@@ -203,7 +227,7 @@ function VientoPage() {
                     <Badge
                       variant="outline"
                       style={{ borderColor: s.color, color: s.color }}
-                      className="w-[92px] justify-center"
+                      className="hidden w-[92px] justify-center min-[400px]:inline-flex"
                     >
                       {s.label}
                     </Badge>
