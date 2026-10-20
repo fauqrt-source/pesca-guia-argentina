@@ -4,7 +4,7 @@ import { Loader2, Wind } from "lucide-react";
 import { PageShell } from "@/components/site-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getMapaViento, type PuntoViento } from "@/lib/viento.functions";
+import { getMapaViento, type PuntoViento } from "@/lib/viento";
 
 const vientoQueryOptions = queryOptions({
   queryKey: ["viento", "argentina"],
@@ -12,6 +12,9 @@ const vientoQueryOptions = queryOptions({
   staleTime: 1000 * 60 * 60, // 1 hora
   retry: 1,
 });
+
+type PuntoOk = PuntoViento & { velocidad: number; rafaga: number; direccion: number };
+const tieneDatos = (p: PuntoViento): p is PuntoOk => p.velocidad !== null && p.direccion !== null;
 
 export const Route = createFileRoute("/viento")({
   head: () => ({
@@ -94,7 +97,7 @@ function escala(v: number) {
 const RUMBOS = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSO", "SO", "OSO", "O", "ONO", "NO", "NNO"];
 const rumbo = (deg: number) => RUMBOS[Math.round((deg % 360) / 22.5) % 16];
 
-function Flecha({ p }: { p: PuntoViento }) {
+function Flecha({ p }: { p: PuntoOk }) {
   const { color } = escala(p.velocidad);
   const px = x(p.lon);
   const py = y(p.lat);
@@ -146,7 +149,8 @@ function VientoPage() {
     timeZone: "America/Argentina/Buenos_Aires",
   });
 
-  const ordenados = [...puntos].sort((a, b) => b.velocidad - a.velocidad);
+  const conDatos = puntos.filter(tieneDatos);
+  const ordenados = [...conDatos.sort((a, b) => b.velocidad - a.velocidad), ...puntos.filter((p) => !tieneDatos(p))];
 
   return (
     <PageShell>
@@ -161,9 +165,9 @@ function VientoPage() {
       </p>
       <p className="mt-1 text-xs text-muted-foreground">Última actualización: {fecha}</p>
 
-      {data.error ? (
+      {data.fallidos > 0 ? (
         <p className="mt-4 rounded-md border border-border bg-secondary/60 p-4 text-sm">
-          {data.error}
+          {data.fallidos} spot(s) sin datos por ahora; el resto se muestra igual.
         </p>
       ) : null}
 
@@ -182,7 +186,7 @@ function VientoPage() {
               stroke="var(--color-border)"
               strokeWidth={0.4}
             />
-            {puntos.map((p) => (
+            {conDatos.map((p) => (
               <Flecha key={p.id} p={p} />
             ))}
           </svg>
@@ -210,6 +214,17 @@ function VientoPage() {
           <h2 className="text-xl">Viento por spot</h2>
           <ul className="mt-3 divide-y divide-border rounded-xl border border-border bg-card shadow-card">
             {ordenados.map((p) => {
+              if (!tieneDatos(p)) {
+                return (
+                  <li key={p.id} className="flex items-center justify-between gap-3 px-4 py-2.5">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">{p.nombre}</p>
+                      <p className="text-xs text-muted-foreground">{p.provincia}</p>
+                    </div>
+                    <p className="text-xs text-muted-foreground">Sin datos</p>
+                  </li>
+                );
+              }
               const s = escala(p.velocidad);
               return (
                 <li key={p.id} className="flex items-center justify-between gap-3 px-4 py-2.5">
