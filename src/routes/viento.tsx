@@ -4,7 +4,7 @@ import { Loader2, Wind } from "lucide-react";
 import { PageShell } from "@/components/site-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getMapaViento, type PuntoViento } from "@/lib/viento.functions";
+import { getMapaViento, type PuntoViento } from "@/lib/viento";
 
 const vientoQueryOptions = queryOptions({
   queryKey: ["viento", "argentina"],
@@ -12,6 +12,9 @@ const vientoQueryOptions = queryOptions({
   staleTime: 1000 * 60 * 60, // 1 hora
   retry: 1,
 });
+
+type PuntoOk = PuntoViento & { velocidad: number; rafaga: number; direccion: number };
+const tieneDatos = (p: PuntoViento): p is PuntoOk => p.velocidad !== null && p.direccion !== null;
 
 export const Route = createFileRoute("/viento")({
   head: () => ({
