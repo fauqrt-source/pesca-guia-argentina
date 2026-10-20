@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Fish } from "lucide-react";
 import type { ReactNode } from "react";
+import { UserMenu } from "./user-menu";
 
 const nav = [
   { to: "/", label: "Inicio" },
@@ -14,7 +15,7 @@ const nav = [
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3">
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3">
         <Link to="/" className="flex items-center gap-2">
           <span className="surface-river flex size-9 items-center justify-center rounded-md">
             <Fish className="size-5" />
@@ -23,12 +24,15 @@ export function SiteHeader() {
             Pesca Argentina
           </span>
         </Link>
-        <nav className="flex items-center gap-1 text-sm">
+        <div className="md:order-last">
+          <UserMenu />
+        </div>
+        <nav className="-mx-1 flex w-full items-center gap-1 overflow-x-auto text-sm md:mx-0 md:w-auto">
           {nav.map((item) => (
             <Link
               key={item.to}
               to={item.to}
-              className="rounded-md px-2.5 py-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              className="shrink-0 rounded-md px-2.5 py-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               activeProps={{ className: "bg-secondary text-foreground" }}
               activeOptions={{ exact: item.to === "/" }}
             >
