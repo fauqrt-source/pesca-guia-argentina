@@ -23,7 +23,7 @@ export interface MapaViento {
   fallidos: number;
 }
 
-const PUNTOS = [
+export const PUNTOS = [
   { id: "paso-patria", nombre: "Paso de la Patria", provincia: "Corrientes", lat: -27.31, lon: -58.57 },
   { id: "corrientes", nombre: "Corrientes", provincia: "Corrientes", lat: -27.47, lon: -58.83 },
   { id: "empedrado", nombre: "Empedrado", provincia: "Corrientes", lat: -27.95, lon: -58.81 },

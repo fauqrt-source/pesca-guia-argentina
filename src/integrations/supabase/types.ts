@@ -14,7 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      capturas: {
+        Row: {
+          created_at: string
+          especie: string
+          fecha: string
+          id: string
+          medida: string | null
+          ubicacion: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          especie: string
+          fecha: string
+          id?: string
+          medida?: string | null
+          ubicacion: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          especie?: string
+          fecha?: string
+          id?: string
+          medida?: string | null
+          ubicacion?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      favoritos: {
+        Row: {
+          created_at: string
+          id: string
+          spot_id: string
+          tipo: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          spot_id: string
+          tipo: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          spot_id?: string
+          tipo?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
