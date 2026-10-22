@@ -11,3 +11,4 @@
 
 - Wind data is fetched from Open-Meteo in the browser (src/lib/viento.ts), not a server function: the shared server IP hits the free daily quota (HTTP 429).
 - Auth uses Lovable Cloud via useSession (src/hooks/use-session.ts); sign-in lives at /auth and the header shows UserMenu.
+- Signed-in-only pages live under src/routes/_authenticated/ (client-side gate, redirects to /auth); user data tables use RLS scoped to auth.uid().
