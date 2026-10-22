@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as RecetasRouteImport } from './routes/recetas'
 import { Route as ResultadosRouteImport } from './routes/resultados'
@@ -17,11 +18,17 @@ import { Route as SenuelosRouteImport } from './routes/senuelos'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as TorneosRouteImport } from './routes/torneos'
 import { Route as VientoRouteImport } from './routes/viento'
+import { Route as AuthenticatedCapturasRouteImport } from './routes/_authenticated/capturas'
+import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
 import { Route as EspecieEspecieIdRouteImport } from './routes/especie.$especieId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -59,6 +66,16 @@ const VientoRoute = VientoRouteImport.update({
   path: '/viento',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedCapturasRoute = AuthenticatedCapturasRouteImport.update({
+  id: '/capturas',
+  path: '/capturas',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFavoritosRoute = AuthenticatedFavoritosRouteImport.update({
+  id: '/favoritos',
+  path: '/favoritos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const EspecieEspecieIdRoute = EspecieEspecieIdRouteImport.update({
   id: '/especie/$especieId',
   path: '/especie/$especieId',
@@ -74,6 +91,8 @@ export interface FileRoutesByFullPath {
   '/sobre': typeof SobreRoute
   '/torneos': typeof TorneosRoute
   '/viento': typeof VientoRoute
+  '/capturas': typeof AuthenticatedCapturasRoute
+  '/favoritos': typeof AuthenticatedFavoritosRoute
   '/especie/$especieId': typeof EspecieEspecieIdRoute
 }
 export interface FileRoutesByTo {
@@ -85,11 +104,14 @@ export interface FileRoutesByTo {
   '/sobre': typeof SobreRoute
   '/torneos': typeof TorneosRoute
   '/viento': typeof VientoRoute
+  '/capturas': typeof AuthenticatedCapturasRoute
+  '/favoritos': typeof AuthenticatedFavoritosRoute
   '/especie/$especieId': typeof EspecieEspecieIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/recetas': typeof RecetasRoute
   '/resultados': typeof ResultadosRoute
@@ -97,6 +119,8 @@ export interface FileRoutesById {
   '/sobre': typeof SobreRoute
   '/torneos': typeof TorneosRoute
   '/viento': typeof VientoRoute
+  '/_authenticated/capturas': typeof AuthenticatedCapturasRoute
+  '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
   '/especie/$especieId': typeof EspecieEspecieIdRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +134,8 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/torneos'
     | '/viento'
+    | '/capturas'
+    | '/favoritos'
     | '/especie/$especieId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,10 +147,13 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/torneos'
     | '/viento'
+    | '/capturas'
+    | '/favoritos'
     | '/especie/$especieId'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/auth'
     | '/recetas'
     | '/resultados'
@@ -132,11 +161,14 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/torneos'
     | '/viento'
+    | '/_authenticated/capturas'
+    | '/_authenticated/favoritos'
     | '/especie/$especieId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   RecetasRoute: typeof RecetasRoute
   ResultadosRoute: typeof ResultadosRoute
@@ -154,6 +186,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -205,6 +244,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VientoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/capturas': {
+      id: '/_authenticated/capturas'
+      path: '/capturas'
+      fullPath: '/capturas'
+      preLoaderRoute: typeof AuthenticatedCapturasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/favoritos': {
+      id: '/_authenticated/favoritos'
+      path: '/favoritos'
+      fullPath: '/favoritos'
+      preLoaderRoute: typeof AuthenticatedFavoritosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/especie/$especieId': {
       id: '/especie/$especieId'
       path: '/especie/$especieId'
@@ -215,8 +268,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCapturasRoute: typeof AuthenticatedCapturasRoute
+  AuthenticatedFavoritosRoute: typeof AuthenticatedFavoritosRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCapturasRoute: AuthenticatedCapturasRoute,
+  AuthenticatedFavoritosRoute: AuthenticatedFavoritosRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   RecetasRoute: RecetasRoute,
   ResultadosRoute: ResultadosRoute,
