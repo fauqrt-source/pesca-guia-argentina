@@ -1,3 +1,4 @@
+import { BotonFavorito } from "@/components/boton-favorito";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, MapPin, Wind } from "lucide-react";
 import { PageShell } from "@/components/site-shell";
@@ -137,7 +138,12 @@ function ResultadosPage() {
         <p className="eyebrow flex items-center gap-1.5 opacity-90">
           <MapPin className="size-3.5" /> {provinciaTitulo}
         </p>
-        <h1 className="mt-2 text-3xl sm:text-4xl">{titulo}</h1>
+        <div className="mt-2 flex items-start justify-between gap-3">
+          <h1 className="text-3xl sm:text-4xl">{titulo}</h1>
+          {region ? (
+            <BotonFavorito tipo="spot" id={region.id} nombre={region.spot} conTexto className="shrink-0 bg-background/90 text-foreground" />
+          ) : null}
+        </div>
         <p className="mt-3 max-w-prose opacity-95">{subtitulo}</p>
         {activos.length > 0 ? (
           <div className="mt-4 flex flex-wrap gap-1.5">
