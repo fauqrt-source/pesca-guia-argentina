@@ -4,6 +4,7 @@ import { Loader2, Wind } from "lucide-react";
 import { PageShell } from "@/components/site-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { BotonFavorito } from "@/components/boton-favorito";
 import { getMapaViento, type PuntoViento } from "@/lib/viento";
 
 const vientoQueryOptions = queryOptions({
@@ -221,7 +222,7 @@ function VientoPage() {
                       <p className="truncate text-sm font-medium">{p.nombre}</p>
                       <p className="text-xs text-muted-foreground">{p.provincia}</p>
                     </div>
-                    <p className="text-xs text-muted-foreground">Sin datos</p>
+                    <div className="flex items-center gap-1"><p className="text-xs text-muted-foreground">Sin datos</p><BotonFavorito tipo="viento" id={p.id} nombre={p.nombre} /></div>
                   </li>
                 );
               }
@@ -246,6 +247,7 @@ function VientoPage() {
                     >
                       {s.label}
                     </Badge>
+                    <BotonFavorito tipo="viento" id={p.id} nombre={p.nombre} />
                   </div>
                 </li>
               );
